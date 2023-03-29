@@ -110,7 +110,7 @@ function uploadPhoto() {
         var customLabels = document.getElementById('custom_labels');
     }
     console.log(fileName);
-    console.log(customLabels.value);
+    console.log(custom_labels.value);
 
     var reader = new FileReader();
     var file = document.getElementById('uploaded_file').files[0];
