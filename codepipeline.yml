@@ -1,0 +1,152 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: My example codepipeline template
+
+# ------------------------- #
+# CloudFormation Parameters #
+# ------------------------- #
+# Parameters:
+
+  # CodeBuildImage:
+  #     Description: The codebuild runtime image to use in the Codebuild project
+  #     Type: String
+  #     Default: "aws/codebuild/standard:2.0"
+
+  #   GithubRepoBranch:
+  #     Description: The git branch that will be polled for changes
+  #     Type: String
+  #     Default: "main"
+
+  #   GitHubOAuthToken:
+  #     NoEcho: 'true'  # Do not display in CloudFormation
+  #     Type: String
+  #     Default: ""
+
+  #   GithubRepoOwner:
+  #     Description: The owner of the repository on GitHub
+  #     Type: String
+  #     Default: "my-github-org"
+
+  #   GithubRepo:
+  #     Description: The git repository base name
+  #     Type: String
+  #     Default: "my-repo"
+
+
+# ------------------------ #
+# CloudFormation Resources #
+# ------------------------ #
+
+Resources:
+
+# S3 Bucket where build artifacts and cache will be uploaded.
+  BuildArtifactBucket:
+    Type: AWS::S3::Bucket
+
+  # IAM role for codebuild project. Should give access all AWS 
+  # resources needed by build and tests run by build.
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              Service: codebuild.amazonaws.com
+      Policies:
+        - PolicyName: CloudWatch
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              # Allow code build to stream logs
+              - Sid: CloudWatchLogsPolicy
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+        - PolicyName: S3
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              # Allow code build to stream logs
+              - Sid: AmazonS3FullAccess
+                Effect: Allow
+                Action:
+                  - s3:*
+                  - s3-object-lambda:* 
+                Resource: "*"
+        - PolicyName: S3
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              # Allow code build to S3 buckets
+              - Sid: AmazonS3FullAccess
+                Effect: Allow
+                Action:
+                  - s3:*
+                Resource: "*"
+
+  # IAM role for pipeline.
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              Service: codepipeline.amazonaws.com
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: S3AccessPolicy
+                Effect: Allow
+                Action:
+                  - S3:*
+                Resource:
+                  - !Sub "arn:aws:s3:::${BuildArtifactBucket}"
+                  - !Sub "arn:aws:s3:::${BuildArtifactBucket}/*"
+              - Sid: CodeBuildAccessPolicy
+                Effect: Allow
+                Action:
+                  - codebuild:BatchGetBuilds
+                  - codebuild:StartBuild
+                Resource:
+                  - !GetAtt CodeBuildProjectTest.Arn
+                  - !GetAtt CodeBuildProjectDeploy.Arn
+                  - !GetAtt CodeBuildProjectTagRepo.Arn
+              - Sid: EventsAccessPolicy
+                Effect: Allow
+                Action: events:PutEvents
+                Resource: "*"
+              - Effect: Allow
+                Action: iam:PassRole
+                Resource: "*"
+  
+  ### Codebuild projects
+  CodeBuildProjectTest:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub "${ShortName}-test"
+      Description: CodePipeline standard build stage provider.
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: cicd/buildspecs/test.yml
+      Artifacts:
+        Type: CODEPIPELINE
+      Cache:
+        Location: !Sub "arn:aws:s3:::${BuildArtifactBucket}"
+        Type: S3
+      TimeoutInMinutes: 5
+      Environment:
+        ComputeType: !Ref CodeBuildEnvironmentComputeType
+        Image: !Ref CodeBuildImage
+        Type: LINUX_CONTAINER
+      ServiceRole: !GetAtt CodeBuildRole.Arn
