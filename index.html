@@ -21,22 +21,25 @@
     </head>
     <center>
         <header class="photos_title">
-            Photo Album Web App S+A
+            Online photo album web app
         </header>
     </center>
-    <body>
+    <body  style="background-image: url('jonas-verstuyft-5GtS0qbcU0s-unsplash.jpg'); background-size: 120%">
         <div class="container-fluid">
             <center>
                 <form action="", method="get", target="", id="search_photos">
                     <input name="search_query" id = "search_query" type="text" placeholder="Insert a query to search for photos..." autocomplete="off" autofocus>
-                    <button type="button">
-                        <i class="large material-icons" id="mic_search" onclick="voiceSearch()">mic</i>
-                    </button>
                 </form>
-                <p class="search_info">Click the microphone icon to record.</p>
                 <div class="row">
                     <button type="button" id="searchPhotos" name="searchPhotos" style="width:100px; height: 25px;" onclick="textSearch()">Search</button>
                 </div>
+            </center>
+        </div>
+        <div>
+            <center>
+                <h4 id="status">Press the button below, and start speaking</h4>
+                <button id="mic_search" onclick="voiceSearch()" style="width:100px; height: 25px;">Speech to text</button>
+                <div id="result" class="hide"></div>
             </center>
         </div>
         <div class="row">
@@ -44,7 +47,7 @@
             </div>
         </div>
         <div class="Upload_files">
-            <h2 style="text-align: center;">Photo Upload Section</h2>
+            <h2 style="text-align: center;">Upload a photo</h2>
             <center>
                 <form action="/action_page.php">
                     <input type="file" id="uploaded_file" name="filename">

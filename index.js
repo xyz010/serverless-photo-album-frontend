@@ -5,25 +5,31 @@
 //     apiKey: 'PFDlGzVrKB7q9p15Rxz3R281ycERNoD94fVw2HkK'
 // });
 
-window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition
-
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+console.log('window', window)
 function voiceSearch(){
-    if ('SpeechRecognition' in window) {
+    if (SpeechRecognition !== undefined) {
         console.log("SpeechRecognition is Working");
     } else {
         console.log("SpeechRecognition is Not Working");
     }
     
     var inputSearchQuery = document.getElementById("search_query");
-    const recognition = new window.SpeechRecognition();
+    let recognition = new SpeechRecognition();
+    console.log('recognition var created');
     //recognition.continuous = true;
 
     micButton = document.getElementById("mic_search");  
     
     if (micButton.innerHTML == "mic") {
         recognition.start();
+        console.log('recognition started');
+
     } else if (micButton.innerHTML == "mic_off"){
         recognition.stop();
+        console.log('recognition stoped');
+
     }
 
     recognition.addEventListener("start", function() {
@@ -42,8 +48,41 @@ function voiceSearch(){
         transcript = event.results[current][0].transcript;
         inputSearchQuery.value = transcript;
         console.log("transcript : ", transcript)
+        textSearch(transcript)
     }
-}
+};
+/*
+
+const status = document.getElementById("status"),
+  output = document.getElementById("result");
+
+startRecognition = () => {
+  if (SpeechRecognition !== undefined) {
+    let recognition = new SpeechRecognition();
+
+    recognition.onstart = () => {
+      status.innerHTML = "Starting listening, speak in the microphone please 🦻";
+      output.classList.add("hide");
+    };
+
+    recognition.onspeechend = () => {
+      status.innerHTML = "I stopped listening ";
+      recognition.stop();
+    };
+
+    recognition.onresult = (result) => {
+      output.classList.remove("hide");
+      print_result = result.results[0][0].transcript
+      output.innerHTML = "<b>{result.results[0][0].transcript}</b>";
+      console.log('Voice Recognition result: ', print_result)
+    };
+    recognition.start();
+  } else {
+    status.innerHTML = "sorry not supported 😭";
+  }
+  console.log('Calling searchPhotos')
+  searchPhotos(print_result)
+};*/
 
 function textSearch() {
     var searchText = document.getElementById('search_query');
