@@ -20,7 +20,8 @@ function voiceSearch(){
     console.log('recognition var created');
     //recognition.continuous = true;
 
-    micButton = document.getElementById("mic_search");  
+    micButton = document.getElementById("mic_search");
+    console.log(micButton);
     
     if (micButton.innerHTML == "mic") {
         recognition.start();
