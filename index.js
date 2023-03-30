@@ -62,7 +62,7 @@ startRecognition = () => {
     let recognition = new SpeechRecognition();
 
     recognition.onstart = () => {
-      status.innerHTML = "Starting listening, speak in the microphone please 🦻";
+      status.innerHTML = "Starting listening, speak in the microphone please ";
       output.classList.add("hide");
     };
 
@@ -79,7 +79,7 @@ startRecognition = () => {
     };
     recognition.start();
   } else {
-    status.innerHTML = "sorry not supported 😭";
+    status.innerHTML = "sorry not supported ";
   }
   console.log('Calling searchPhotos')
   searchPhotos(print_result)
