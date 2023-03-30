@@ -5,85 +5,34 @@
 //     apiKey: 'PFDlGzVrKB7q9p15Rxz3R281ycERNoD94fVw2HkK'
 // });
 
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-console.log('window', window)
-function voiceSearch(){
+const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+
+function voiceSearch() {
     if (SpeechRecognition !== undefined) {
         console.log("SpeechRecognition is Working");
+        recognition = new SpeechRecognition();
+        var inputSearchQuery = document.getElementById("search_query");
+        recognition.onstart = () => {
+            console.log("recognition started");
+            inputSearchQuery.classList.add("hide");
+        };
+        recognition.onspeechend = () => {
+            console.log("recognition stopped");
+            recognition.stop();
+        };
+        recognition.onresult = (result) => {
+            transcript = result.results[0][0].transcript;
+            console.log('Transcript = ', transcript);
+            inputSearchQuery.value = transcript;
+            searchPhotos(transcript);
+          };
+          recognition.start();
     } else {
         console.log("SpeechRecognition is Not Working");
-    }
-    
-    var inputSearchQuery = document.getElementById("search_query");
-    let recognition = new SpeechRecognition();
-    console.log('recognition var created');
-    //recognition.continuous = true;
-
-    micButton = document.getElementById("mic_search");
-    console.log(micButton);
-    
-    if (micButton.innerHTML == "mic") {
-        recognition.start();
-        console.log('recognition started');
-
-    } else if (micButton.innerHTML == "mic_off"){
-        recognition.stop();
-        console.log('recognition stoped');
-
-    }
-
-    recognition.addEventListener("start", function() {
-        micButton.innerHTML = "mic_off";
-        console.log("Recording.....");
-    });
-
-    recognition.addEventListener("end", function() {
-        console.log("Stopping recording.");
-        micButton.innerHTML = "mic";
-    });
-
-    recognition.addEventListener("result", resultOfSpeechRecognition);
-    function resultOfSpeechRecognition(event) {
-        const current = event.resultIndex;
-        transcript = event.results[current][0].transcript;
-        inputSearchQuery.value = transcript;
-        console.log("transcript : ", transcript)
-        textSearch(transcript)
-    }
+    };
 };
-/*
 
-const status = document.getElementById("status"),
-  output = document.getElementById("result");
 
-startRecognition = () => {
-  if (SpeechRecognition !== undefined) {
-    let recognition = new SpeechRecognition();
-
-    recognition.onstart = () => {
-      status.innerHTML = "Starting listening, speak in the microphone please ";
-      output.classList.add("hide");
-    };
-
-    recognition.onspeechend = () => {
-      status.innerHTML = "I stopped listening ";
-      recognition.stop();
-    };
-
-    recognition.onresult = (result) => {
-      output.classList.remove("hide");
-      print_result = result.results[0][0].transcript
-      output.innerHTML = "<b>{result.results[0][0].transcript}</b>";
-      console.log('Voice Recognition result: ', print_result)
-    };
-    recognition.start();
-  } else {
-    status.innerHTML = "sorry not supported ";
-  }
-  console.log('Calling searchPhotos')
-  searchPhotos(print_result)
-};*/
 
 function textSearch() {
     var searchText = document.getElementById('search_query');
