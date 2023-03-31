@@ -113,7 +113,7 @@ function uploadPhoto() {
 
         var params = {
             'object': fileName,
-            'bucket': 'bucketb2',
+            'bucket': 'bucketb2-cf',
             'x-amz-meta-customLabels': custom_labels.value
         };
         var additionalParams = {
