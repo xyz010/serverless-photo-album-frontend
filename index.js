@@ -114,7 +114,8 @@ function uploadPhoto() {
         var params = {
             'object': fileName,
             'bucket': 'bucketb2-cf',
-            'x-amz-meta-customLabels': custom_labels.value
+            'x-amz-meta-customlabels': custom_labels.value,
+            'Content-Type': 'text/base64'
         };
         var additionalParams = {
             headers: {
@@ -122,7 +123,6 @@ function uploadPhoto() {
                 'Access-Control-Allow-Headers': '*',
                 // 'Access-Control-Allow-Methods': '*',
                 // 'Content-Type': file.type,
-                'Content-Type': 'text/base64',
                 'X-Api-Key': 'PFDlGzVrKB7q9p15Rxz3R281ycERNoD94fVw2HkK'
             }
         };
