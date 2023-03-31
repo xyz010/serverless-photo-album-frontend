@@ -55,15 +55,16 @@ function searchPhotos(searchText) {
     var params = {
         'q' : searchText
     };
-    // var additionalParams = {
-    //     headers: {
-    //         'Access-Control-Allow-Origin': '*',
-    //         'Access-Control-Allow-Headers': '*',
-    //         'Access-Control-Allow-Methods': '*'
-    //     }
-    // };
+    var additionalParams = {
+        headers: {
+            'X-Api-Key': 'PFDlGzVrKB7q9p15Rxz3R281ycERNoD94fVw2HkK'
+            // 'Access-Control-Allow-Origin': '*',
+            // 'Access-Control-Allow-Headers': '*',
+            // 'Access-Control-Allow-Methods': '*'
+        }
+    };
 
-    apigClient.searchGet(params, {}, {})
+    apigClient.searchGet(params, {}, additionalParams)
         .then(function(result) {
             console.log("Result : ", result);
 
@@ -77,8 +78,6 @@ function searchPhotos(searchText) {
                 photosDiv.innerHTML = '<center><text>There were no Images matching this keyword!</text></center>'
             else if (image_paths == 'Query not supported')
                 photosDiv.innerHTML = '<center><text>Query error, please try again. You can say, show me photos of dog.</text></center>'
-
-
             else
                 for (n = 0; n < image_paths.length; n++) {
                     images_list = image_paths[n].split('/');
