@@ -1,5 +1,4 @@
-/*
- * Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/* * Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -122,12 +121,12 @@ apigClientFactory.newClient = function (config) {
     apigClient.uploadBucketObjectPut = function (params, body, additionalParams) {
         if(additionalParams === undefined) { additionalParams = {}; }
         
-        apiGateway.core.utils.assertParametersDefined(params, [], []);
+        apiGateway.core.utils.assertParametersDefined(params, ['Content-Type', 'object', 'bucket', 'x-amz-meta-customlabels', 'Accept'], ['body']);
         
         var uploadBucketObjectPutRequest = {
             verb: 'put'.toUpperCase(),
-            path: pathComponent + uritemplate('/upload/{bucket}/{object}').expand(apiGateway.core.utils.parseParametersToObject(params, [])),
-            headers: apiGateway.core.utils.parseParametersToObject(params, []),
+            path: pathComponent + uritemplate('/upload/{bucket}/{object}').expand(apiGateway.core.utils.parseParametersToObject(params, ['object', 'bucket', ])),
+            headers: apiGateway.core.utils.parseParametersToObject(params, ['Content-Type', 'x-amz-meta-customlabels', 'Accept']),
             queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
             body: body
         };
@@ -140,11 +139,11 @@ apigClientFactory.newClient = function (config) {
     apigClient.uploadBucketObjectOptions = function (params, body, additionalParams) {
         if(additionalParams === undefined) { additionalParams = {}; }
         
-        apiGateway.core.utils.assertParametersDefined(params, [], []);
+        apiGateway.core.utils.assertParametersDefined(params, ['object', 'bucket', 'x-amz-meta-customlabels', 'Content-Type'], ['body']);
         
         var uploadBucketObjectOptionsRequest = {
             verb: 'options'.toUpperCase(),
-            path: pathComponent + uritemplate('/upload/{bucket}/{object}').expand(apiGateway.core.utils.parseParametersToObject(params, [])),
+            path: pathComponent + uritemplate('/upload/{bucket}/{object}').expand(apiGateway.core.utils.parseParametersToObject(params, ['object', 'bucket', ])),
             headers: apiGateway.core.utils.parseParametersToObject(params, ['x-amz-meta-customlabels', 'Content-Type']),
             queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
             body: body
