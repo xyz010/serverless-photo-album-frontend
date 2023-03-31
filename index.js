@@ -69,7 +69,7 @@ function searchPhotos(searchText) {
             console.log("Result : ", result);
 
             image_paths = result["data"];
-            console.log("image_paths : ", image_paths);
+            // console.log("image_paths : ", image_paths);
 
             var photosDiv = document.getElementById("photos_search_results");
             var n;
