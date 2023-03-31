@@ -1,4 +1,5 @@
-/* * Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/*
+ * Copyright 2010-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -52,7 +53,7 @@ apigClientFactory.newClient = function (config) {
 
     
     // extract endpoint and path from url
-    var invokeUrl = 'https://xegu33fmaf.execute-api.us-east-1.amazonaws.com/v1';
+    var invokeUrl = 'https://q0uw4snir1.execute-api.us-east-1.amazonaws.com/v1';
     var endpoint = /(^https?:\/\/[^\/]+)/g.exec(invokeUrl)[1];
     var pathComponent = invokeUrl.substring(endpoint.length);
 
@@ -121,12 +122,12 @@ apigClientFactory.newClient = function (config) {
     apigClient.uploadBucketObjectPut = function (params, body, additionalParams) {
         if(additionalParams === undefined) { additionalParams = {}; }
         
-        apiGateway.core.utils.assertParametersDefined(params, ['Content-Type', 'object', 'bucket', 'x-amz-meta-customlabels', 'Accept'], ['body']);
+        apiGateway.core.utils.assertParametersDefined(params, ['object', 'bucket', 'x-amz-meta-customlabels', 'Content-Type'], ['body']);
         
         var uploadBucketObjectPutRequest = {
             verb: 'put'.toUpperCase(),
             path: pathComponent + uritemplate('/upload/{bucket}/{object}').expand(apiGateway.core.utils.parseParametersToObject(params, ['object', 'bucket', ])),
-            headers: apiGateway.core.utils.parseParametersToObject(params, ['Content-Type', 'x-amz-meta-customlabels', 'Accept']),
+            headers: apiGateway.core.utils.parseParametersToObject(params, ['x-amz-meta-customlabels', 'Content-Type']),
             queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
             body: body
         };
